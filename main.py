@@ -52,17 +52,17 @@ def main():
     print(f"{kernel=}")
 
     # STEP 1: apply blurring/smoothening
-    # if blur_technique is not None:
-    #     print(f"applying {blur_technique} blurring")
-    #     match blur_technique:
-    #         case 'average':
-    #             img = blur.average_blurring(img, kernel)
-    #         case 'gaussian':
-    #             img = blur.gaussian_blurring(img, kernel)
-    #         case 'median':
-    #             img = blur.median_blurring(img, kernel_size)
-    #         case 'bilateral':
-    #             img = blur.bilateral_blurring(img)
+    if blur_technique is not None:
+        print(f"applying {blur_technique} blurring")
+        match blur_technique:
+            case 'average':
+                img = blur.average_blurring(img, kernel)
+            case 'gaussian':
+                img = blur.gaussian_blurring(img, kernel)
+            case 'median':
+                img = blur.median_blurring(img, kernel_size)
+            case 'bilateral':
+                img = blur.bilateral_blurring(img)
 
     # STEP 2: convert to binary image
     img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
@@ -93,7 +93,7 @@ def main():
 
     img = cv.resize(img_as_ubyte(invert(skeleton)), (64, 64), interpolation=cv.INTER_AREA)
     # img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-    threshold, img = cv.threshold(img, 200, 255, cv.THRESH_BINARY)
+    threshold, img = cv.threshold(img, 250, 255, cv.THRESH_BINARY)
     cv.imshow("image", img)
     # cv.waitKey(0)
     while cv.waitKeyEx() != 27:
