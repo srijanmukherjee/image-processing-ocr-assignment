@@ -10,6 +10,17 @@ import sys
 
 import blur
 
+"""
+TODO:
+- Save the results into png file with appropriate file prefix
+    ex. input file: E1.png
+        output file: <output directory>/E1_blurred_<technique_name>.png (for Q1)
+                     <output directory>/E1_binary_64x64.png             (for Q2)
+                     <output directory>/E1_skeletonized_64x64.png       (for Q3)
+- Automatically compute the binary image threshold (https://stackoverflow.com/a/20075082)
+- Save the final result (skeletonized binary 64x64 image) in xlsx format (for the assigment)
+"""
+
 def kernel_type(value: str):
     """validates that kernel size is odd"""
     value = int(value)
