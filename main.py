@@ -28,6 +28,7 @@ def main():
     ap.add_argument('-v', '--verbose', default=False, action='store_true')
     ap.add_argument('-b', '--blur', choices=blur.BLUR_OPTIONS, help='Choose blurring techinque', default='median')
     ap.add_argument('-k', '--kernel', type=kernel_type, help='set kernel size (must be odd), the kernel will be set as (size x size)', default=3)
+    ap.add_argument('-t', '--threshold', type=int, default=150, help='threshold for binarizing image')
     args = vars(ap.parse_args())
 
     if args.get('verbose') == False:
@@ -45,6 +46,7 @@ def main():
     kernel_size = args.get("kernel")
     blur_technique = args.get('blur')
     kernel = (kernel_size, kernel_size)
+    binary_threshold = args.get('threshold')
     
     print(f"{height=}")
     print(f"{width=}")
@@ -66,7 +68,7 @@ def main():
 
     # STEP 2: convert to binary image
     img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-    threshold, img = cv.threshold(img, 150, 255, cv.THRESH_BINARY)
+    threshold, img = cv.threshold(img, binary_threshold, 255, cv.THRESH_BINARY)
 
     # STEP 3: resize to 64x64
     resized_img = cv.resize(img, (64, 64), interpolation=cv.INTER_AREA)
