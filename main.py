@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from cv2.typing import MatLike
+import numpy
 from skimage.morphology import skeletonize
 from skimage.util import invert
 from skimage import img_as_ubyte
@@ -11,6 +12,11 @@ import argparse
 import sys
 
 import blur
+
+DEFAULT_OUTPUT_DIR          = 'result'
+DEFAULT_BLUR_OPTION         = 'median'
+DEFAULT_VERBOSITY           = False
+DEFAULT_KERNEL_SIZE         = 3
 
 """
 TODO:
@@ -32,11 +38,10 @@ def main():
     # initialize arguments
     ap = argparse.ArgumentParser()
     ap.add_argument('image', type=str, help='path to image')
-    ap.add_argument('-v', '--verbose', default=False, action='store_true')
-    ap.add_argument('-b', '--blur', choices=blur.BLUR_OPTIONS, help='Choose blurring techinque', default='median')
-    ap.add_argument('-k', '--kernel', type=kernel_type, help='set kernel size (must be odd), the kernel will be set as (size x size)', default=3)
-    ap.add_argument('-t', '--threshold', type=int, default=150, help='threshold for binarizing image')
-    ap.add_argument('-o', '--output', type=str, default='result', help='output directory')
+    ap.add_argument('-v', '--verbose', default=DEFAULT_VERBOSITY, action='store_true', help="Enable verbose output")
+    ap.add_argument('-b', '--blur', choices=blur.BLUR_OPTIONS, help='Choose blurring techinque', default=DEFAULT_BLUR_OPTION)
+    ap.add_argument('-k', '--kernel', type=kernel_type, help='set kernel size (must be odd), the kernel will be set as (size x size)', default=DEFAULT_KERNEL_SIZE)
+    ap.add_argument('-o', '--output', type=str, default=DEFAULT_OUTPUT_DIR, help='output directory')
     args = vars(ap.parse_args())
 
     verbose = args.get('verbose')
@@ -89,23 +94,21 @@ def main():
 
     # STEP 2: convert to binary image
     img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-    _, img = cv.threshold(img, binary_threshold, 255, cv.THRESH_BINARY)
 
     # STEP 3: resize to 64x64
-    resized_img = cv.resize(img, (64, 64), interpolation=cv.INTER_AREA)
+    img = cv.resize(img, (64, 64), interpolation=cv.INTER_AREA)
+    threshold = int(numpy.average(img))
+    _, img = cv.threshold(img, threshold, 255, cv.THRESH_BINARY)
 
     file_path = f'{outdir}/{filename_without_ext}_blurred_{blur_technique}_binary_64x64.png'
     if verbose:
         print(f'Writing to {file_path}')
-    cv.imwrite(file_path, resized_img)
+    cv.imwrite(file_path, img)
 
     # STEP 4: skeletonize
     img = invert(img)
     skeleton = skeletonize(img)
-
-    # get 64x64 binary skeleton image
-    img = cv.resize(img_as_ubyte(invert(skeleton)), (64, 64), interpolation=cv.INTER_AREA)
-    _, img = cv.threshold(img, 250, 255, cv.THRESH_BINARY)
+    img = img_as_ubyte(invert(skeleton))
 
     file_path = f'{outdir}/{filename_without_ext}_blurred_{blur_technique}_skeleton_binary_64x64.png'
     if verbose:
