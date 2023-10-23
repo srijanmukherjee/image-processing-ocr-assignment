@@ -16,6 +16,9 @@ python main.py <image>
 
 # Example
 python main.py --blur gaussian -k 7 -v dataset/English/E3.png 
+
+# Run over all examples in the dataset
+python experiment.py
 ```
 
 > **NOTE:** <br> 
