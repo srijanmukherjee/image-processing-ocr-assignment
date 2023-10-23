@@ -28,6 +28,11 @@ def kernel_type(value: str):
     
     return value
 
+def save_image(img: MatLike, filepath: str, verbose: bool = False):
+    if verbose:
+        print(f'Writing to {filepath}')
+    cv.imwrite(filepath, img)
+
 def main():    
     # initialize arguments
     ap = argparse.ArgumentParser()
@@ -55,7 +60,6 @@ def main():
     kernel_size = args.get("kernel")
     blur_technique = args.get('blur')
     kernel = (kernel_size, kernel_size)
-    binary_threshold = args.get('threshold')
     outdir = args.get('output')
     filename_without_ext = Path(args.get('image')).stem
 
@@ -81,10 +85,7 @@ def main():
             case 'bilateral':
                 img = blur.bilateral_blurring(img)
 
-        file_path = f'{outdir}/{filename_without_ext}_blurred_{blur_technique}.png'
-        if verbose:
-            print(f'Writing to {file_path}')
-        cv.imwrite(file_path, img)
+        save_image(img, f'{outdir}/{filename_without_ext}_blurred_{blur_technique}.png', verbose)
 
     # STEP 2: convert to binary image
     img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
@@ -94,21 +95,14 @@ def main():
     threshold = int(numpy.average(img))
     _, img = cv.threshold(img, threshold, 255, cv.THRESH_BINARY)
 
-    file_path = f'{outdir}/{filename_without_ext}_blurred_{blur_technique}_binary_64x64.png'
-    if verbose:
-        print(f'Writing to {file_path}')
-    cv.imwrite(file_path, img)
+    save_image(img, f'{outdir}/{filename_without_ext}_blurred_{blur_technique}_binary_64x64.png', verbose)
 
     # STEP 4: skeletonize
     img = invert(img)
     skeleton = skeletonize(img)
     img = img_as_ubyte(invert(skeleton))
 
-    file_path = f'{outdir}/{filename_without_ext}_blurred_{blur_technique}_skeleton_binary_64x64.png'
-    if verbose:
-        print(f'Writing to {file_path}')
-    cv.imwrite(file_path, img)
-
+    save_image(img, f'{outdir}/{filename_without_ext}_blurred_{blur_technique}_skeleton_binary_64x64.png', verbose)
 
     # Write skeletonize 64x64 img to spreadsheet
     df = pd.DataFrame(img)
