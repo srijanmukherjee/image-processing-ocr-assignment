@@ -1,12 +1,15 @@
 # Image processing for OCR
 
-Basic image processing before using image for OCR
+Basic image processing (smoothening, binarizing, skeletonizing) before using image for OCR
 
 ## Instructions
 ```bash
 python -m venv env
 source ./env/bin/activate
 python main.py <image>
+
+# Example
+python main.py --blur gaussian -k 7 -v dataset/English/E3.png 
 ```
 
 > **NOTE:** <br> 
@@ -14,18 +17,20 @@ python main.py <image>
 
 ### Usage
 ```
-usage: main.py [-h] [-v] [-b {average,gaussian,median,bilateral}] [-k KERNEL] image
+usage: main.py [-h] [-v] [-b {average,gaussian,median,bilateral}] [-k KERNEL] [-o OUTPUT] image
 
 positional arguments:
   image                 path to image
 
 options:
   -h, --help            show this help message and exit
-  -v, --verbose
+  -v, --verbose         Enable verbose output
   -b {average,gaussian,median,bilateral}, --blur {average,gaussian,median,bilateral}
                         Choose blurring techinque
   -k KERNEL, --kernel KERNEL
                         set kernel size (must be odd), the kernel will be set as (size x size)
+  -o OUTPUT, --output OUTPUT
+                        output directory
 ```
 
 ## What does it do?
