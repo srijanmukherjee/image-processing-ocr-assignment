@@ -4,8 +4,14 @@ Basic image processing (smoothening, binarizing, skeletonizing) before using ima
 
 ## Instructions
 ```bash
+# start virtual environment
 python -m venv env
 source ./env/bin/activate
+
+# install dependencies
+pip install -r requirements.txt
+
+# run the code
 python main.py <image>
 
 # Example
