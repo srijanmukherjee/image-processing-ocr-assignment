@@ -18,11 +18,6 @@ DEFAULT_BLUR_OPTION         = 'median'
 DEFAULT_VERBOSITY           = False
 DEFAULT_KERNEL_SIZE         = 3
 
-"""
-TODO:
-- Automatically compute the binary image threshold (https://stackoverflow.com/a/20075082)
-"""
-
 def kernel_type(value: str):
     """validates that kernel size is odd"""
     value = int(value)
