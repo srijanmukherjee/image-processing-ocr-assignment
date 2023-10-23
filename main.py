@@ -5,7 +5,6 @@ import numpy
 from skimage.morphology import skeletonize
 from skimage.util import invert
 from skimage import img_as_ubyte
-import matplotlib.pyplot as plt 
 import pandas as pd
 import cv2 as cv
 import argparse
