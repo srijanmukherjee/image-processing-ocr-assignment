@@ -5,7 +5,7 @@ import os
 def main():
     output_dir = "result"
     dataset_dir = "dataset"
-    types = ("*.bmp", "*.png")
+    types = ("*.bmp", "*.png", "*.jpg")
 
     files = []
     for filetype in types:
